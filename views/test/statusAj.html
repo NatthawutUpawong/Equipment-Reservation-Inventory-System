@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/public/css/bootstrap.min.css">
+    <script src="/public/js/bootstrap.bundle.min.js"></script>
+
+    <link rel="stylesheet" href="/public/css/home.css">
+    <link rel="stylesheet" href="/public/css/dashboard.css">
+    <link rel="stylesheet" href="/public/css/statusAj.css">
+    <link rel="stylesheet" href="/public/css/statusAj1.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.33/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" />
+
+    <!-- material icons -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="/ProjeactUI/css/UserSearch.css">
+    <title>StatusAJ</title>
+</head>
+<body>
+    <div class="container-fluid" id="container">
+        <aside>
+            <div class="top">
+                <div class="logo">
+                    <img src="/public/img/Borrowing 101 Education.png" alt="">
+                </div>
+            </div>
+            <div class="sidebar">
+                <a href="/views/Project/dashboardAj.html" class="sidebarf" id="active">
+                    <span class="material-symbols-outlined">home</span>
+                    <h3>Home</h3>
+                </a>
+                <a href="/views/Project/ajsearch.html" class="sidebarf">
+                    <span class="material-symbols-outlined">Search</span>
+                    <h3>Search</h3>
+                </a>
+                <a href="/views/Project/statusAj.html" class="sidebarf">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <h3>Status</h3>
+                </a>
+                <a href="/views/Project/historyAj.html" class="sidebarf">
+                    <span class="material-symbols-outlined">history</span>
+                    <h3>History</h3>
+                </a>
+                <a href="/views/Project/login.html" class="sidebarf">
+                    <span class="material-symbols-outlined">logout</span>
+                    <h3>Log out</h3>
+                </a>
+            </div>
+        </aside>
+        <!-----------------end side bar -->
+        <div class="container-fluid">
+
+            <div class="">
+                <div class="container">
+                    <h1>Requirement</h1>
+                    <div class="row justify-content-center">
+                        <div class="col-12">
+                            <div class="card shadow-2-strong" style="background-color: #f5f7fa;">
+                                <div class="card-body">
+                                    
+
+                                    <div class=" mt-3">
+                                        <div class="row">
+
+                                            <table id="myTable" class="display" style="width: 100%;">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>USER NAME</th>
+                                                        <th>PRODUCT NAME</th>
+                                                        <th>BORROWED DATE</th>
+                                                        <th>RETURNED DATE</th>
+                                                        
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>Tiger Nixon</td>
+                                                        <td>System Architect</td>
+                                                        <td>XXXXX</td>
+                                                        <td>xx/xx/xx</td>
+                                                        <td>xx/xx/xx</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Garrett Winters</td>
+                                                        <td>Accountant</td>
+                                                        <td>XXXXX</td>
+                                                        <td>xx/xx/xx</td>
+                                                        <td>xx/xx/xx</td>
+                                                        <td><button id="btnError" class="btn btn-success btn-sm">APPROVE</button>
+                                                        </td>
+                                                        <td><button id="btnCancle4" class="btn btn-danger btn-sm">REJECT</button></td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Ashton Cox</td>
+                                                        <td>Junior Technical Author</td>
+                                                        <td>XXXXX</td>
+                                                        <td>xx/xx/xx</td>
+                                                        <td>xx/xx/xx</td>
+                                                        <td><button id="btnError1" class="btn btn-success btn-sm">APPROVE</button>
+                                                        </td>
+                                                        <td><button id="btnCancle3" class="btn btn-danger btn-sm">REJECT</button></td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Cedric Kelly</td>
+                                                        <td>Senior Javascript Developer</td>
+                                                        <td>XXXXX</td>
+                                                        <td>xx/xx/xx</td>
+                                                        <td>xx/xx/xx</td>
+                                                        <td><button id="btnError2" class="btn btn-success btn-sm">APPROVE</button>
+                                                        </td>
+                                                        <td><button id="btnCancle2" class="btn btn-danger btn-sm">REJECT</button></td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Airi Satou</td>
+                                                        <td>Accountant</td>
+                                                        <td>XXXXX</td>
+                                                        <td>xx/xx/xx</td>
+                                                        <td>xx/xx/xx</td>
+                                                        <td><button id="btnError3" class="btn btn-success btn-sm">APPROVE</button>
+                                                        </td>
+                                                        <td><button id="btnCancle1" class="btn btn-danger btn-sm">REJECT</button></td>
+
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            <script>
+                                                $(document).ready(function () {
+                                                    $("#myTable").DataTable();
+                                                });
+                                            </script>
+                                            <script>
+                                                $(document).ready(function () {
+                                                    $("#myTable").DataTable();
+                                                });
+
+                                                document.querySelector('#btnError1').onclick = function () {
+                                                    Swal.fire({
+                                                        icon: 'success',
+                                                        title: 'success',
+                                                        text: 'Already approved!'
+                                                    });
+
+                                                }
+                                                console.log("suscess");
+                                                document.querySelector('#btnError2').onclick = function () {
+                                                    Swal.fire({
+                                                        icon: 'success',
+                                                        title: 'success',
+                                                        text: 'Already approved!'
+                                                    });
+                                                }
+                                                console.log("suscess");
+                                                document.querySelector('#btnError3').onclick = function () {
+                                                    Swal.fire({
+                                                        icon: 'success',
+                                                        title: 'success',
+                                                        text: 'Already approved!'
+                                                    });
+                                                }
+                                                console.log("suscess");
+                                            </script>
+
+                                            <script>
+                                                document.querySelector('#btnCancle1').onclick = function () {
+                                                    Swal.fire({
+                                                        title: 'Submit your annotation ',
+                                                        input: 'text',
+                                                        inputAttributes: {
+                                                            autocapitalize: 'off'
+                                                        },
+                                                        showCancelButton: true,
+                                                        confirmButtonText: 'Sent',
+                                                        showLoaderOnConfirm: true,
+
+                                                    })
+                                                }
+                                            </script>
+                                            <script>
+                                                document.addEventListener('DOMContentLoaded', function () {
+                                                    const Btn_delete = document.querySelectorAll('.btn-success');
+
+                                                    // เมื่อมีคลิกที่ปุ่ม "btn-delete"
+                                                    Btn_delete.forEach(function (btn) {
+                                                        btn.addEventListener('click', function () {
+                                                            // เมื่อคลิกที่ปุ่ม "btn-delete" แสดง Modal
+                                                            $('#deleteConfirmationModal').modal('show');
+
+                                                            // ตั้งค่าการดำเนินการเมื่อคลิกที่ปุ่ม "ลบ"
+                                                            document.getElementById('confirmDelete').addEventListener('click', function () {
+                                                                // ทำการลบรายการที่คุณต้องการที่นี่
+                                                                // หากลบเสร็จแล้ว คุณสามารถปิด Modal ด้วย $('#deleteConfirmationModal').modal('hide');
+                                                            });
+                                                        });
+                                                    });
+                                                });
+                                            </script>
+                                        </div>
+                                    </div>
+
+                                    <!-- <div class="table-responsive">
+                            <div class="container mt-2">
+                                <div class="input-group">
+                                    <input type="text" class="form-control " placeholder="Search...">
+                                    <div class="input-group-append">
+                                    </div>
+                                </div>
+                            </div>
+                            <table id="myTable" class="display mt-2" style="width: 100%;">
+                                <thead>
+                                    <tr>
+
+                                        <th> <i class="fas  fa-caret-down"></i></th>
+                                        <th>Username <i class="fas fa-caret-down"></i></th>
+                                        <th>Productname</th>
+                                        <th>Borrowed date <i class="fas fa-caret-down"></i></th>
+                                        <th>Returned date</th>
+
+                                    </tr>
+                                    <tr>
+
+                                        <td>1</td>
+                                        <td>Ann Culhane
+                                            5684236526
+                                        </td>
+                                        <td>XXXXX</td>
+                                        <td>xx/xx/xx</td>
+                                        <td>xx/xx/xx</td>
+                                        <td><button id="btnError1" class="btn btn-success btn-sm">RECEIVED</button>
+                                        </td>
+                                        <td><button id="btnCancle1" class=" btn btn-danger btn-sm">CANCEL</button></td>
+                                    </tr>
+                                    <tr>
+
+                                        <td>1</td>
+                                        <td>Ann Culhane
+                                            5684236526
+                                        </td>
+                                        <td>XXXXX</td>
+                                        <td>xx/xx/xx</td>
+                                        <td>xx/xx/xx</td>
+                                        <td><button id="btnError2" class="btn btn-success btn-sm">RECEIVED</button>
+                                        </td>
+                                        <td><button id="btnCancle2" class="btn btn-danger btn-sm">CANCEL</button></td>
+                                    </tr>
+
+
+
+
+
+                                </thead>
+                            </table>
+                            <script>
+                                document.querySelector('#btnError1').onclick = function () {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'success',
+                                        text: 'Already approved!'
+                                    });
+                                    
+                                }
+                                console.log("suscess");
+                                document.querySelector('#btnError2').onclick = function () {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'success',
+                                        text: 'Already approved!'
+                                    });
+                                }
+                                console.log("suscess");
+                                document.querySelector('#btnError3').onclick = function () {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'success',
+                                        text: 'Already approved!'
+                                    });
+                                }
+                                console.log("suscess");
+                            </script>
+                            <script>
+                                document.querySelector('#btnCancle1').onclick = function () {
+                                        Swal.fire({
+                                            title: 'Submit your annotation ',
+                                            input: 'text',
+                                            inputAttributes: {
+                                                autocapitalize: 'off'
+                                            },
+                                            showCancelButton: true,
+                                            confirmButtonText: 'Look up',
+                                            showLoaderOnConfirm: true,
+                                            preConfirm: (login) => {
+                                                return fetch(`//api.github.com/users/${login}`)
+                                                    .then(response => {
+                                                        if (!response.ok) {
+                                                            throw new Error(response.statusText)
+                                                        }
+                                                        return response.json()
+                                                    })
+                                                    .catch(error => {
+                                                        Swal.showValidationMessage(
+                                                            `Request failed: ${error}`
+                                                        )
+                                                    })
+                                            },
+                                            allowOutsideClick: () => !Swal.isLoading()
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                Swal.fire({
+                                                    title: `${result.value.login}'s avatar`,
+                                                    imageUrl: result.value.avatar_url
+                                                })
+                                            }
+                                        })
+                                    }
+                            </script>
+                            <script>
+                                document.querySelector('#btnCancle2').onclick = function () {
+                                        Swal.fire({
+                                            title: 'Submit your annotation ',
+                                            input: 'text',
+                                            inputAttributes: {
+                                                autocapitalize: 'off'
+                                            },
+                                            showCancelButton: true,
+                                            confirmButtonText: 'Look up',
+                                            showLoaderOnConfirm: true,
+                                            preConfirm: (login) => {
+                                                return fetch(`//api.github.com/users/${login}`)
+                                                    .then(response => {
+                                                        if (!response.ok) {
+                                                            throw new Error(response.statusText)
+                                                        }
+                                                        return response.json()
+                                                    })
+                                                    .catch(error => {
+                                                        Swal.showValidationMessage(
+                                                            `Request failed: ${error}`
+                                                        )
+                                                    })
+                                            },
+                                            allowOutsideClick: () => !Swal.isLoading()
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                Swal.fire({
+                                                    title: `${result.value.login}'s avatar`,
+                                                    imageUrl: result.value.avatar_url
+                                                })
+                                            }
+                                        })
+                                    }
+                            </script>
+                        </div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+</body>
+</html>

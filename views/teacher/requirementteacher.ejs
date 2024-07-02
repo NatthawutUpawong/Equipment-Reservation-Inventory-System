@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- BS5 -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/bootstrap.bundle.min.js"></script>
+
+    <link rel="stylesheet" href="/css/home.css">
+
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <title>ListStaff</title>
+</head>
+<style>
+
+</style>
+
+<body>
+
+    <div class="container-fluid" id="container">
+        <aside>
+            <div class="top">
+                <div class="logo">
+                    <img src="/assets/Borrowing 101 Education.png" alt="">
+                </div>
+            </div>
+            <div class="sidebar">
+                <a class="active" id="btnhome">
+                    <span class="material-symbols-outlined">home</span>
+                    <h3>HOME</h3>
+                </a>
+                <a class="link-light" id="btnsearch">
+                    <span class="material-symbols-outlined">Search</span>
+                    <h3>ITEM</h3>
+                </a>
+                <a class="link-light" id="btnhistory">
+                    <span class="material-symbols-outlined">history</span>
+                    <h3>HISTORY</h3>
+                </a>
+                <a class="link-light" id="btnBorrowing">
+                    <span class="material-symbols-outlined">format_list_bulleted</span>
+                    <h3>REQUIREMENT</h3>
+                </a>
+
+                <a class="link-light" id="btnlogout">
+                    <span class="material-symbols-outlined">logout</span>
+                    <h3>LOG OUT</h3>
+                </a>
+            </div>
+        </aside>
+        <div class="container">
+            <h1 class="mt-5"><b>REQUIREMENT</b></h1>
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <div class="py-3 container ">
+                    </div>
+                    <div class="" style="background-color: #f5f7fa;">
+                        <div class="card-body">
+
+                            <div class="table-responsive">
+
+                            </div>
+                        </div>
+                        <table class="table table-striped table-hover table-bordered">
+
+                            <thead>
+                                <tr>
+
+                                <tr>
+                                    <th>BorrowID</th>
+                                    <th>ItemName</th>
+                                    <th>UserName</th>
+                                    <th>Borrowed date </th>
+                                    <th>returned date</th>
+                                </tr>
+
+
+                                </tr>
+
+                            </thead>
+                            <tbody id="borrow">
+
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script>
+            const tblProduct = document.querySelector('#borrow');
+
+            getUser();
+            logout();
+            itemsearch();
+            history();
+            home();
+            getrequire();
+
+            //
+            async function getrequire() {
+                try {
+                    const response = await fetch('/getborrowrequirement');
+                    if (response.ok) {
+                        const json = await response.json();
+                        data = json.products;
+                        console.log(data);
+                        let rows = '';
+                        data.forEach(function (p) {
+                            if (p.bor_status == 'pending') {
+                                rows += `<tr><td>${p.bor_id}</td>`;
+                                rows += `<td>${p.pro_name}</td>`;
+                                rows += `<td>${p.user_name}</td>`;
+                                rows += `<td>${new Date(p.bor_date).toLocaleDateString()}</td>`;
+                                rows += `<td>${new Date(p.bor_ret_date).toLocaleDateString()}</td>`;
+                                rows += `<td><button class="btn btn-approve btn-success" id="${p.bor_id}">Approve</button>  `;
+                                rows += `<button class="btn btn-disapprove btn-danger" id="${p.bor_id}">Disapprove</button></td><tr>`;
+                            }
+                        });
+                        tblProduct.innerHTML = rows;
+                        approvereq();
+                        disapprovereq();
+
+                    }
+                    else {
+                        throw Error('Connection error');
+                    }
+                } catch (err) {
+                    console.error(err);
+                    // alert(err.message);
+                }
+            };
+
+            function approvereq() {
+                Btn_approvereq = document.querySelectorAll('.btn-approve');
+                Btn_approvereq.forEach(function (btn) {
+                    btn.onclick = function () {
+                        Swal.fire({
+                            title: "Are you sure?",
+                            text: "You won't be able to revert this!",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Yes, approved!"
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                Swal.fire({
+                                    title: "Approved!",
+                                    text: "The item has been approved.",
+                                    icon: "success"
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.reload();
+                                    }
+                                })
+                                // alert(btn.id);
+                                const apiEndpoint = '/confirmborrow/'
+                                let itemId = btn.id;
+                                const updatedBorrowData = {
+                                    bor_status: 'Approved',
+                                    bor_annotation_teacher: 'Approved by teacher',
+                                };
+
+                                fetch(apiEndpoint + itemId, {
+                                    method: 'PUT',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify(updatedBorrowData),
+                                })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        // alert(data.status)
+                                        // window.location = '/requirementteacher'
+
+                                        // Handle the response from the server
+                                        console.log(data);
+                                        // You can update your HTML or perform other actions based on the response
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                    });
+                            }
+                        });
+
+                    }
+                });
+            }
+            function disapprovereq() {
+                Btn_disapprovereq = document.querySelectorAll('.btn-disapprove');
+                Btn_disapprovereq.forEach(function (btn) {
+                    btn.onclick = async function () {
+                        // alert(btn.id);
+                        const { value: text } = await Swal.fire({
+                            input: "textarea",
+                            inputLabel: "Annotation",
+                            inputPlaceholder: "Type your annotation here...",
+                            inputAttributes: {
+                                "aria-label": "Type your message here"
+                            },
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Yes, disapprove!"
+                        })
+                        if (text) {
+
+                            // alert(text);
+                            const apiEndpoint = '/confirmborrow/'
+                            let itemId = btn.id;
+                            const updatedBorrowData = {
+                                bor_status: 'Disapproved',
+                                bor_annotation_teacher: text,
+                            };
+
+                            fetch(apiEndpoint + itemId, {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(updatedBorrowData),
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    // alert(data.status)
+                                    // window.location = '/requirementteacher'
+
+                                    // Handle the response from the server
+                                    // console.log(data);
+                                    // You can update your HTML or perform other actions based on the response
+                                }).then(
+                                    window.location.reload()
+                                )
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                });
+                        }
+
+
+                    }
+                });
+            }
+
+            //get user info
+            async function getUser() {
+                try {
+                    const response = await fetch('/user');
+                    if (response.ok) {
+                        const data = await response.json();
+                        // document.querySelector('#user').innerText = 'Welcome ' + data.username;
+                        console.log(data);
+                    }
+                    else {
+                        throw Error('Connection error');
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert(err.message);
+                }
+            };
+            function logout() {
+                bntsignout = document.querySelector('#btnlogout');
+                bntsignout.onclick = function () {
+                    fetch('/logout', {
+                        method: 'GET',
+                        credentials: 'include' // Include credentials (cookies) in the request
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                // Redirect to the home page or login page after successful logout
+                                window.location.href = "/login";
+                            } else {
+                                console.error("Logout failed");
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error during logout:", error);
+                        });
+                }
+            }
+            function home() {
+                bntsignout = document.querySelector('#btnhome');
+                bntsignout.onclick = function () {
+                    window.location = '/dashboard'
+                }
+            }
+            function itemsearch() {
+                bntsignout = document.querySelector('#btnsearch');
+                bntsignout.onclick = function () {
+                    window.location = '/itemteacher'
+                }
+            }
+            function history() {
+                bntsignout = document.querySelector('#btnhistory');
+                bntsignout.onclick = function () {
+                    window.location = '/historyteacher'
+                }
+            }
+
+        </script>
+</body>
+
+</html>

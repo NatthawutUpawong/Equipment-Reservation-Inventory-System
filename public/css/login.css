@@ -1,0 +1,32 @@
+.container{
+    flex: 9;
+    margin-top: 10%;
+    justify-content: center;
+    /* width: 30%; */
+    align-content: center;
+    display: flex;
+}
+#row{
+    display: flex;
+}
+#formLogin{
+    width: 50%;
+    /* align-self: center; */
+    /* justify-self: center; */
+}
+#imglogo{
+    width: 500px;
+    height: 500px;
+    }
+
+.register {
+    justify-content: center;
+    align-content: center;
+    display: flex;
+    /* flex: ; */
+    background-color: midnightblue;
+    /* padding: 100px 100px; */
+    height: 100vh;
+    /* width: 60%; */
+    flex: 3;
+}

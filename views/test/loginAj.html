@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/public/css/bootstrap.min.css">
+    <script src="/public/js/bootstrap.bundle.min.js"></script>
+    <title>LoginAJ</title>
+</head>
+
+<style>
+    #row {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .register {
+        background-color: midnightblue;
+        padding: 100px 100px;
+        height: 100vh;
+        width: 768px;
+        flex: 4;
+    }
+
+    .detail {
+        padding: 80px 60px;
+        flex: 8;
+    }
+
+    #btnsign {
+        background-color: midnightblue;
+        color: white;
+    }
+</style>
+
+<body>
+    <div id="row">
+        <!-- <div class="container"> -->
+            <div class="register">
+                <img src="/public/img/Borrowing 101 Education.png" alt="">
+            </div>
+        <!-- </div> -->
+
+        <!-- <div class="container"> -->
+            <div class="detail">
+                <h2>Login</h2>
+                <div>
+                    <label class="form-label" for="username">Username</label>
+                    <input class="form-control" type="text" id="username">
+                </div>
+                <div>
+                    <label class="form-label my-2" for="password">Password</label>
+                    <input class="form-control" type="password" id="password">
+                    <!-- <p class="text-danger">Password</p> -->
+                </div>
+                <a class="btn btn-primary mb-3 my-3" id="btnsign" href="/views/Project/dashboardAj.html">Login</a>
+                <br>
+                Do you have <a class="text-danger" href="/views/Project/registerStaff.html">Register</a>
+            </div>
+        <!-- </div> -->
+    </div>
+</body>
+
+</html>

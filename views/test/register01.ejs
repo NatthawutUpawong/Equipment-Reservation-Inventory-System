@@ -1,0 +1,125 @@
+!
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/notiflix-aio-3.2.6.min.js"></script>
+    <link rel="stylesheet" href="/css/register.css">
+
+</head>
+
+<body>
+    <div class="container">
+        <form id="formLogin">
+            <!-- Email input -->
+            <div class="form-outline mb-4">
+                <input name="txtEmail" type="email" class="form-control " placeholder="Email address" required />
+                <!-- <label class="form-label" for="form2Example1">Email address</label> -->
+            </div>
+
+            <!-- Password input -->
+            <div class="form-outline mb-4">
+                <input name="txtPassword" type="password" class="form-control" placeholder="Password" required />
+                <!-- <label class="form-label" for="form2Example2">Password</label> -->
+            </div>
+
+            <!-- fname input -->
+            <div class="form-outline mb-4">
+                <input name="txtfname" type="text" class="form-control" placeholder="fname" required />
+                <!-- <label class="form-label" for="form2Example2">Password</label> -->
+            </div>
+
+            <!-- lname input -->
+            <div class="form-outline mb-4">
+                <input name="txtlname" type="text" class="form-control" placeholder="lname" required />
+                <!-- <label class="form-label" for="form2Example2">Password</label> -->
+            </div>
+
+            <!-- stID input -->
+            <div class="form-outline mb-4">
+                <input name="txtstid" type="text" class="form-control" placeholder="Enter of studenID 10 digits." pattern="[0-9]{10}"
+                    maxlength="10" required />
+                <!-- <label class="form-label" for="form2Example2">Password</label> -->
+            </div>
+
+            <!-- PHONE input -->
+            <div class="form-outline mb-4">
+                <input name="txtphone" type="text" class="form-control" placeholder="Enter of Phone 10 digits." pattern="[0-9]{10}"
+                    maxlength="10" required />
+                <!-- <label class="form-label" for="form2Example2">Password</label> -->
+            </div>
+
+            <!-- img input -->
+            <div class="form-outline mb-4">
+                <input name="txtimg" type="text" class="form-control" placeholder="url" required />
+                <!-- <label class="form-label" for="form2Example2">Password</label> -->
+            </div>
+
+
+
+            <!-- Submit button -->
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+        </form>
+        <!-- <a href="/views/welcome_template_get.html"></a> -->
+    </div>
+
+    <script>
+        const formLogin = document.querySelector('#formLogin');
+        formLogin.onsubmit = async function (e) {
+            e.preventDefault();
+            const email = formLogin['txtEmail'].value;
+            const password = formLogin['txtPassword'].value;
+            const fname = formLogin['txtfname'].value;
+            const lname = formLogin['txtlname'].value;
+            const stid = formLogin['txtstid'].value;
+            const phone = formLogin['txtphone'].value;
+            const img = formLogin['txtimg'].value;
+
+            // console.log(username, password);
+            try {
+                const options = {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        "email": email,
+                        "password": password,
+                        "fname": fname,
+                        "lname": lname,
+                        "stid": stid,
+                        "phone": phone,
+                        "img": img
+                    }),
+                };
+                const response = await fetch('/register', options); //Send data value fro front to back
+                if (response.ok) {
+                    const data = await response.text();
+                    await Notiflix.Notify.success(
+                        'Success',
+                        window.location = '/'
+                    );
+                    // await Notiflix.notif.success('Success', data, 'OK', window.location = '/')
+
+                }
+                else if (response.status === 401) {
+                    const data = await response.text();
+                    throw Error(data);
+                }
+                else {
+                    throw Error('Connection error');
+                }
+            } catch (err) {
+                console.error(err.message);
+                // alert(err.message);
+                Notiflix.Report.failure('Error', err.message, 'Close');
+            }
+        }
+    </script>
+</body>
+
+</html>

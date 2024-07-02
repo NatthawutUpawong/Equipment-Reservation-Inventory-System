@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SearchStaff</title>
+
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- stylesheet -->
+  <link rel="stylesheet" href="/css/home.css">
+
+  <!-- material icons -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+
+<body>
+
+  <body>
+
+    <div class="container-fluid" id="container">
+      <aside>
+        <div class="top">
+          <div class="logo">
+            <img src="/assets/Borrowing 101 Education.png" alt="">
+          </div>
+        </div>
+        <div class="sidebar">
+          <a class="sidebarf" id="btnhome">
+            <span class="material-symbols-outlined">home</span>
+            <h3>Home</h3>
+          </a>
+          <a class="sidebarf" id="btnsearch">
+            <span class="material-symbols-outlined">Search</span>
+            <h3>Search</h3>
+          </a>
+          <a class="sidebarf" id="btnstatus">
+            <span class="material-symbols-outlined">notifications</span>
+            <h3>Status</h3>
+          </a>
+
+          <a class="sidebarf" id="btnsignout">
+            <span class="material-symbols-outlined">logout</span>
+            <h3>Log out</h3>
+          </a>
+        </div>
+      </aside>
+      <main>
+        <div class="container text-start">
+          <h1>Search Product</h1>
+
+        </div>
+        <div class="  py-3 container ">
+          <form class="row g-3">
+            <div class="col-auto">
+              <label for="inputPassword2" class="visually-hidden">Password</label>
+              <input type="password" class="form-control" id="inputPassword2" placeholder="Product Name">
+            </div>
+            <div class="col-auto">
+              <label for="inputPassword2" class="visually-hidden">Password</label>
+              <input type="password" class="form-control" id="inputPassword2" placeholder="Product Code">
+            </div>
+            <div class="col-auto">
+              <select class="form-select" aria-label="Default select example">
+                <option selected>All category</option>
+                <option value="1">Sports</option>
+                <option value="2">IT equipment</option>
+                <option value="3">Music Intrument</option>
+              </select>
+            </div>
+            <div class="col-auto">
+              <button type="submit" class="btn btn-primary mb-3">Confirm</button>
+            </div>
+          </form>
+        </div>
+        <div class="container py-1 text-start">
+          <h3>Product</h3>
+        </div>
+
+
+
+
+        <!-- Product list -->
+        <div class="album py-1 bg-body-tertiary">
+          <div class="container">
+            <div class="row row-cols-1 row-cols-sm-3 row-cols-md-4 g-4">
+              <div class="col">
+                <!-- Card ต้นเเบบ -->
+                <div class="card shadow-sm">
+                  <svg class="bd-placeholder-img card-img-top" width="100%" height="225"
+                    xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
+                    preserveAspectRatio="xMidYMid slice" focusable="false">
+                    <title>Placeholder</title>
+                    <rect width="100%" height="100%" fill="#55595c" /><text x="50%" y="50%" fill="#eceeef"
+                      dy=".3em">Thumbnail</text>
+                  </svg>
+                  <div class="card-body">
+                    <p class="card-text">Productname</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="btn-group">
+                        <a class="btn btn-sm btn-outline-secondary" href="/views/Project/search1.2.html">View</a>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <!-- CARD PRODCUT -->
+                <div class="card shadow-sm">
+                  <!-- <svg class="card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg"
+                        role="img" preserveAspectRatio="xMidYMid slice" focusable="false">
+                        <title>Placeholder</title>
+                      </svg> -->
+                  <img
+                    src="data:image/jpeg;base64,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"
+                    class="card-img-top" width="100%" height="225" alt="..." url='' role="img"
+                    preserveAspectRatio="xMidYMid slice" focusable="false">
+                  <div class="card-body">
+                    <p class="card-text">Productname</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="btn-group">
+                        <a class="btn btn-sm btn-outline-secondary" href="/views/Project/search1.2.html">View</a>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <!-- CARD PRODCUT -->
+                <div class="card shadow-sm">
+                  <!-- <svg class="card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg"
+                        role="img" preserveAspectRatio="xMidYMid slice" focusable="false">
+                        <title>Placeholder</title>
+                      </svg> -->
+                  <img
+                    src="https://th.yamaha.com/th/files/02_FG9-R_684054cae48712b0f19c4291946b2f25.jpg?impolicy=resize&imwid=396&imhei=396"
+                    class="card-img-top" width="100%" height="225" alt="..." url='' role="img"
+                    preserveAspectRatio="xMidYMid slice" focusable="false">
+                  <div class="card-body">
+                    <p class="card-text">Productname</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="btn-group">
+                        <a class="btn btn-sm btn-outline-secondary" href="/views/Project/search1.2.html">View</a>
+
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <!-- CARD PRODCUT -->
+                <div class="card shadow-sm">
+                  <!-- <svg class="card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg"
+                        role="img" preserveAspectRatio="xMidYMid slice" focusable="false">
+                        <title>Placeholder</title>
+                      </svg> -->
+                  <img src="https://media.music.co.th/media/products/138c8519889441f2a09876349de23504.jpg"
+                    class="card-img-top" width="100%" height="225" alt="..." url='' role="img"
+                    preserveAspectRatio="xMidYMid slice" focusable="false">
+                  <div class="card-body">
+                    <p class="card-text">Productname</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="btn-group">
+                        <a class="btn btn-sm btn-outline-secondary" href="/views/Project/search1.2.html">View</a>
+
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <!-- CARD PRODCUT -->
+                <div class="card shadow-sm">
+                  <!-- <svg class="card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg"
+                        role="img" preserveAspectRatio="xMidYMid slice" focusable="false">
+                        <title>Placeholder</title>
+                      </svg> -->
+                  <img src="https://contents.mediadecathlon.com/p2154115/d2be907e547fdf2bdc92214b275e502d/p2154115.jpg"
+                    class="card-img-top" width="100%" height="225" alt="..." url='' role="img"
+                    preserveAspectRatio="xMidYMid slice" focusable="false">
+                  <div class="card-body">
+                    <p class="card-text">Productname</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="btn-group">
+                        <a class="btn btn-sm btn-outline-secondary" href="/views/Project/search1.2.html">View</a>
+
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <!-- CARD PRODCUT -->
+                <div class="card shadow-sm">
+                  <!-- <svg class="card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg"
+                        role="img" preserveAspectRatio="xMidYMid slice" focusable="false">
+                        <title>Placeholder</title>
+                      </svg> -->
+                  <img
+                    src="https://store.storeimages.cdn-apple.com/8756/as-images.apple.com/is/MK2A3?wid=1200&hei=630&fmt=jpeg&qlt=95&.v=1628010471000"
+                    class="card-img-top" width="100%" height="225" alt="..." url='' role="img"
+                    preserveAspectRatio="xMidYMid slice" focusable="false">
+                  <div class="card-body">
+                    <p class="card-text">Productname</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="btn-group">
+                        <a class="btn btn-sm btn-outline-secondary" href="/views/Project/search1.2.html">View</a>
+
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col">
+                <!-- CARD PRODCUT -->
+                <div class="card shadow-sm">
+                  <!-- <svg class="card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg"
+                        role="img" preserveAspectRatio="xMidYMid slice" focusable="false">
+                        <title>Placeholder</title>
+                      </svg> -->
+                  <img src="https://th.yamaha.com/th/files/gp_product_gb1_459e54923754d712b233bfd93827af34.jpg"
+                    class="card-img-top" width="100%" height="225" alt="..." url='' role="img"
+                    preserveAspectRatio="xMidYMid slice" focusable="false">
+                  <div class="card-body">
+                    <p class="card-text">Productname</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="btn-group">
+                        <a class="btn btn-sm btn-outline-secondary" href="/views/Project/search1.2.html">View</a>
+
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+
+              <div class="col">
+                <!-- CARD PRODCUT -->
+                <div class="card shadow-sm">
+                  <!-- <svg class="card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg"
+                        role="img" preserveAspectRatio="xMidYMid slice" focusable="false">
+                        <title>Placeholder</title>
+                      </svg> -->
+                  <img
+                    src="https://mercular.s3.ap-southeast-1.amazonaws.com/images/products/2022/08/Product/acer-aspire-3-a315-43-r48d-notebook-front-view.jpg"
+                    class="card-img-top" width="100%" height="225" alt="..." url='' role="img"
+                    preserveAspectRatio="xMidYMid slice" focusable="false">
+                  <div class="card-body">
+                    <p class="card-text">Productname</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="btn-group">
+                        <a class="btn btn-sm btn-outline-secondary" href="/views/Project/search1.2.html">View</a>
+
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+
+    </div>
+    <script>
+      let token = localStorage.getItem('token');
+      show();
+      signout();
+      homeuser();
+      usersearch();
+      userstatus();
+
+      function show() {
+        console.log(token)
+      }
+      accessProtected();
+      async function accessProtected() {
+        try {
+          const options = {
+            method: 'POST',
+            headers: {
+              "Content-Type": "application/json",
+              'Authorization': `Bearer ${token}`,
+            },
+          };
+          const response = await fetch('/authen', options); //Send data value fro front to back
+          const data = await response.json();
+          console.log(data)
+          if (data.status == 'ok') {
+            // alert('authen success')
+          }
+          else {
+            alert('authen faild')
+            localStorage.removeItem('token');
+            window.location = '/'
+          }
+        } catch (err) {
+          console.error(err.message);
+          // alert(err.message);
+          Notiflix.Report.failure('Error', err.message, 'Close');
+        }
+      }
+      function signout() {
+        bntsignout = document.querySelector('#btnsignout');
+        bntsignout.onclick = function () {
+          localStorage.removeItem('token')
+          window.location = '/'
+        }
+      }
+      function homeuser() {
+        bntsignout = document.querySelector('#btnhome');
+        bntsignout.onclick = function () {
+          window.location = '/homeuser'
+        }
+      }
+      function usersearch() {
+        bntsignout = document.querySelector('#btnsearch');
+        bntsignout.onclick = function () {
+          window.location = '/usersearch'
+        }
+      }
+      function userstatus() {
+        bntsignout = document.querySelector('#btnstatus');
+        bntsignout.onclick = function () {
+          window.location = '/userstatus'
+        }
+      }
+
+    </script>
+  </body>
+
+</html>

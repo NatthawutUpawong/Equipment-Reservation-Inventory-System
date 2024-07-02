@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HomeUser</title>
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/bootstrap.bundle.min.js"></script>
+
+    <!-- <link rel="stylesheet" href="/css/home.css"> -->
+    <link rel="stylesheet" href="/css/userHome.css">
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+
+    <link rel="stylesheet"href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+
+<body>
+    <div class="container-fluid" id="container">
+        <aside>
+            <div class="top">
+                <div class="logo">
+                    <img src="/assets/Borrowing 101 Education.png" alt="">
+                </div>
+            </div>
+            <div class="sidebar">
+                <a class="sidebarf" id="btnhome">
+                    <span class="material-symbols-outlined">home</span>
+                    <h3>HOME</h3>
+
+                </a>
+                <a class="sidebarf" id="btnstatus">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <h3>STATUS</h3>
+                </a>
+
+                <a class="sidebarf" id="btnlogout">
+                    <span class="material-symbols-outlined">logout</span>
+                    <h3>LOG OUT</h3>
+                </a>
+            </div>
+        </aside>
+
+        <main>
+            <div class="shop container">
+                <div class="container text-start mt-5">
+                    <h1>SEARCH PRODUCT</h1>
+                    <h6 id="user">
+
+                    </h6>
+                </div>
+                <div class="  py-3 container ">
+                </div>
+                <div class="container py-1 text-start">
+                    <h3>Product</h3>
+                </div>
+
+                <div class="shop-content" id="procontainer">
+                    <!-- Elements will be added here dynamically -->
+                </div>
+                <ul class="pagination mt-5" id="pagination">
+                    <!-- Pagination links will be added here dynamically -->
+                </ul>
+
+                <!-- <div id="product-list"></div> -->
+            </div>
+        </main>
+    </div>
+    <script>
+        showPage(1);
+        setupPagination();
+
+        getUser();
+        logout();
+        userstatus();
+        //get user info
+        async function getUser() {
+            try {
+                const response = await fetch('/user');
+                if (response.ok) {
+                    const data = await response.json();
+                    document.querySelector('#user').innerText = 'Welcome ' + data.username;
+                    console.log(data);
+                }
+                else {
+                    throw Error('Connection error');
+                }
+            } catch (err) {
+                console.error(err);
+                alert(err.message);
+            }
+        };
+        function logout() {
+            bntsignout = document.querySelector('#btnlogout');
+            bntsignout.onclick = function () {
+                fetch('/logout', {
+                    method: 'GET',
+                    credentials: 'include' // Include credentials (cookies) in the request
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // Redirect to the home page or login page after successful logout
+                            window.location.href = "/login";
+                        } else {
+                            console.error("Logout failed");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error during logout:", error);
+                    });
+            }
+        }
+
+        function homeuser() {
+            bntsignout = document.querySelector('#btnhome');
+            bntsignout.onclick = function () {
+                localStorage.clear();
+                window.location = '/homeuser'
+            }
+        }
+        function userstatus() {
+            bntsignout = document.querySelector('#btnstatus');
+            bntsignout.onclick = function () {
+                localStorage.clear();
+                window.location = '/userstatus'
+            }
+        }
+
+        //////////////////card------------------------
+        const container = document.getElementById('procontainer');
+        const pagination = document.getElementById('pagination');
+        const itemsPerPage = 6; // Adjust the number of items per page as needed
+        let data;
+
+        async function showPage(page) {
+            const res = await fetch('/getallproducts'); // Replace with your API endpoint
+            const json = await res.json();
+            container.innerHTML = '';
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageItems = json.products.slice(start, end); // Adjust the property name based on your API response
+
+            pageItems.forEach(product => {
+                let pic = product.pro_image;
+                let itemstatus = product.pro_status;
+                // console.log(product.pro_status);
+
+                if (itemstatus == '1') {
+                    itemstatus = 'available';
+                    const card = document.createElement('div');
+                    card.setAttribute('class', 'product-box');
+                    card.innerHTML = `
+                    <img src="/assets/${pic}" alt="" class="product-img">
+                    <h2 class="product-title">${product.pro_name}</h2>
+                    <span class="product-price text-success">${itemstatus}</span>
+                    <i class='bx bx-detail get-detail'></i>
+                    `;
+                    card.addEventListener('click', () => {
+                        localStorage.setItem('detailitem_id', product.pro_id);
+                        window.location.href = `getdetail`;
+                        // alert(product.pro_id);
+                    });
+
+                    container.appendChild(card);
+                }
+                else if (itemstatus == '0') {
+                    itemstatus = 'unavailable';
+                    const card = document.createElement('div');
+                    card.setAttribute('class', 'product-box');
+                    card.innerHTML = `
+                    <img src="/assets/${pic}" alt="" class="product-img">
+                    <h2 class="product-title">${product.pro_name}</h2>
+                    <span class="product-price text-danger">${itemstatus}</span>
+                    `;
+                    container.appendChild(card);
+                }
+            });
+        }
+
+
+        async function setupPagination() {
+            const res = await fetch('/getallproducts'); // Replace with your API endpoint
+            const json = await res.json();
+            const pageCount = Math.ceil(json.products.length / itemsPerPage); // Adjust the property name
+
+            for (let i = 1; i <= pageCount; i++) {
+                const button = document.createElement('button');
+                button.textContent = i;
+                button.setAttribute('class', 'btn btn-success m-2');
+                button.addEventListener('click', () => showPage(i));
+                pagination.appendChild(button);
+            }
+        }
+
+
+
+
+    </script>
+</body>
+
+</html>

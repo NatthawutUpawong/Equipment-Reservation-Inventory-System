@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- BS5 -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/bootstrap.bundle.min.js"></script>
+
+    <link rel="stylesheet" href="/css/home.css">
+
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <title>Add</title>
+</head>
+<style>
+    h2,
+    p {
+        font-family: "WildWest", Serif;
+        /* เปลี่ยน "Your Desired Font" เป็นชื่อฟอนต์ที่คุณต้องการใช้ */
+    }
+</style>
+
+<body>
+
+    <div class="container-fluid" id="container">
+        <aside>
+            <div class="top">
+                <div class="logo">
+                    <img src="/assets/Borrowing 101 Education.png" alt="">
+                </div>
+            </div>
+            <div class="sidebar">
+                <a class="active" id="btnhome">
+                    <span class="material-symbols-outlined">home</span>
+                    <h3>HOME</h3>
+                </a>
+                <a class="link-light" id="btnsearch">
+                    <span class="material-symbols-outlined">Search</span>
+                    <h3>ITEM</h3>
+                </a>
+                <a class="link-light" id="btnhistory">
+                    <span class="material-symbols-outlined">history</span>
+                    <h3>HISTORY</h3>
+                </a>
+                <a class="link-light" id="btnBorrowing">
+                    <span class="material-symbols-outlined">format_list_bulleted</span>
+                    <h3>BORROW</h3>
+                </a>
+
+                <a class="link-light" id="btnlogout">
+                    <span class="material-symbols-outlined">logout</span>
+                    <h3>LOG OUT</h3>
+                </a>
+            </div>
+        </aside>
+        <div class="container mt-5">
+            <h1 class="my-3"><b>ADD</b></h1>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="img img-fluid">
+                        <img class="fit-picture" id="itemimage" src=""
+                            style="object-fit: cover; border-radius: 50%; width: 280px; height: 280px; border: 2px solid rgba(0, 0, 0, 0.519);">
+                    </div>
+                    <div class="container my-5 mx-5">
+                        <h3>File upload</h3>
+
+                        <form id="formUpload" method="post" enctype="multipart/form-data">
+                            <input type="file" name="filetoupload"><br>
+                            <input type="submit" class="btn btn-primary mt-3" value="Upload">
+                        </form>
+                    </div>
+                </div>
+                <div class="col-sm-8 input_edit">
+                    <form id="formadditem">
+                        <div class="mb-4">
+                            <h2>
+                                <b>
+                                    Item Name : <input type="text" name="item_Name" id="itemname" placeholder="">
+                                </b>
+                            </h2>
+                        </div>
+                        <div class="mb-4">
+                            <h2>
+                                <b>
+                                    Item Category :
+                                    <select name="item_Category" id="itemcategory">
+                                        <option value="Sports">Sports</option>
+                                        <option value="IT equipment">IT equipment</option>
+                                        <option value="Musical Instrument">Musical Instrument</option>
+                                    </select>
+                                </b>
+                            </h2>
+                        </div>
+                        <div class="mb-4">
+                            <h2>
+                                <b>
+                                    Item Status :
+                                    <select name="item_Status" id="itemstatus" pattern="[01]">
+                                        <option value="0">0</option>
+                                        <option value="1">1</option>
+                                    </select>
+                                </b>
+                                <p class="text-danger">#0 = unavailable</p>
+                                <p class="text-success">#1 = available</p>
+                            </h2>
+
+                        </div>
+                        <div class="mb-4">
+                            <h2>
+                                <b>
+                                    Item Information :
+                                </b>
+                            </h2>
+                            <textarea name="item_Info" id="iteminfo" cols="80" rows="10"
+                                placeholder="Write a description"></textarea>
+
+
+                            <div class="btn_edit my-5 ">
+                                <button class="btn btn-success" type="button" id="additem">Add</button>
+                                <!-- <button class="btn btn-danger">Adjust</button> -->
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <script>
+
+            const itemid = localStorage.getItem('item_id');
+            let itemimg = '';
+
+            //---------------------------------------- upload img-----------------------------
+            const formUpload = document.querySelector('#formUpload');
+            const filetoupload = document.querySelector('input[name="filetoupload"]');
+
+            formUpload.onsubmit = function (event) {
+                event.preventDefault();
+                //check whether user selects a file
+                if (filetoupload.files.length == 0) {
+                    alert("no files selected");
+                    return;
+                }
+                // add file to form
+                const formData = new FormData(this);
+                const options = {
+                    method: 'POST',
+                    body: formData
+                }
+                uploadImage(options);
+
+            }
+
+
+            async function uploadImage(options) {
+                fetch('/uploading', options)
+                    .then(response => response.json()) // Parse the response as JSON
+                    .then(data => {
+                        if (data.message === 'Upload is successful') {
+                            // Access the renamed file name from the response
+                            itemimg = data.fileName;
+                            // Do something with the renamed file name (if needed)
+                            var imgElement = document.getElementById('itemimage');
+                            imgElement.src = `/assets/${itemimg}`;
+                            alert('Upload is successful.');
+                        } else {
+                            throw Error('Upload failed');
+                        }
+                    })
+                    .catch(function (error) {
+                        alert(error.message);
+                    })
+            }
+            // ----------------------------------- upload img---------------------------------------
+
+
+
+            //-------------------------------------add item------------------------------------------
+            function addItemdetail() {
+                bntedititemByid = document.querySelector('#additem');
+                bntedititemByid.onclick = async function () {
+                    const formedit = document.querySelector('#formadditem');
+                    const item_Category = document.querySelector('#itemcategory');
+                    const item_Status = document.querySelector('#itemstatus');
+                    if (formedit['item_Name'].value != '' && formedit['item_Info'].value != '') {
+                        const updatedItem = {
+                            pro_name: formedit['item_Name'].value,
+                            pro_category: item_Category.value,
+                            pro_status: item_Status.value,
+                            pro_detail: formedit['item_Info'].value,
+                            pro_image: itemimg,
+                        }
+                        const newDetail = {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', },
+                            body: JSON.stringify(updatedItem),
+                        }
+                        addnewItem(newDetail);
+                    } else {
+                        alert('Please fill all field')
+                    }
+                }
+            }
+
+            async function addnewItem(newDetail) {
+                try {
+                    const response = await fetch('/addproduct', newDetail);
+                    const data = await response.json();
+                    if (data.status === 'add product success') {
+                        alert('add item successfully');
+                        window.location = '/itemAddmin'
+                    } else {
+                        alert(`Error: ${data.message}`);
+                    }
+                }
+                catch (error) {
+                    console.error('Error updating product:', error);
+                }
+
+            }
+            //------------------------------------- add item-------------------------------------
+
+
+
+            //get user info--------------------------------------------------------------------------
+            async function getUser() {
+                try {
+                    const response = await fetch('/user');
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log(data);
+                    }
+                    else {
+                        throw Error('Connection error');
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert(err.message);
+                }
+            };
+            //get user info--------------------------------------------------------------------------
+
+
+
+            //log uot --------------------------------------------------------------------------
+            function logout() {
+                bntsignout = document.querySelector('#btnlogout');
+                bntsignout.onclick = function () {
+                    fetch('/logout', {
+                        method: 'GET',
+                        credentials: 'include' // Include credentials (cookies) in the request
+                    })
+                        .then(response => {
+                            if (response.ok) {
+                                // Redirect to the home page or login page after successful logout
+                                window.location.href = "/login";
+                                localStorage.clear();
+                            } else {
+                                console.error("Logout failed");
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error during logout:", error);
+                        });
+                }
+            }
+            //log uot --------------------------------------------------------------------------
+
+
+            
+            function itemsearch() {
+                bntitemsearch = document.querySelector('#btnsearch');
+                bntitemsearch.onclick = function () {
+                    localStorage.clear();
+                    window.location = '/itemAddmin'
+                }
+            }
+            function history() {
+                bnthistory = document.querySelector('#btnhistory');
+                bnthistory.onclick = function () {
+                    localStorage.clear();
+                    window.location = '/historyaddmin'
+                }
+            }
+            function borrowing() {
+                bntborrowing = document.querySelector('#btnBorrowing');
+                bntborrowing.onclick = function () {
+                    localStorage.clear();
+                    window.location = '/Borrowingaddmin'
+                }
+            }
+            function home() {
+                bnthome = document.querySelector('#btnhome');
+                bnthome.onclick = function () {
+                    localStorage.clear();
+                    window.location = '/dashboard'
+                }
+            }
+
+            // Call functions on page load
+            itemsearch();
+            history();
+            borrowing();
+            home();
+            getUser();
+            logout();
+            addItemdetail();
+
+        </script>
+
+
+</body>
+
+</html>

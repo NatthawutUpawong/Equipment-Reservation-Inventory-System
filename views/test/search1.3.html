@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- BS5 -->
+    <link rel="stylesheet" href="/public/css/bootstrap.min.css">
+    <script src="/public/js/bootstrap.bundle.min.js"></script>
+
+    <!-- stylesheet -->
+    <link rel="stylesheet" href="/public/css/search1.3.css">
+
+    <!-- material icons -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <title>SearchUser</title>
+
+
+    <!-- import date -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
+    <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+
+   
+</head>
+<style>
+
+</style>
+
+<body>
+
+    <div class="container-fluid" id="container">
+        <aside>
+            <div class="top">
+                <div class="logo">
+                    <img src="/public/img/Borrowing 101 Education.png" alt="">
+                </div>
+            </div>
+            <div class="sidebar">
+                <a href="/views/Project/home.html" class="sidebarf" id="active">
+                    <span class="material-symbols-outlined">home</span>
+                    <h3>Home</h3>
+                </a>
+                <a href="/views/Project/usersearch.html" class="sidebarf">
+                    <span class="material-symbols-outlined">Search</span>
+                    <h3>Search</h3>
+                </a>
+              
+                <a href="/views/Project/statusUser.html" class="sidebarf">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <h3>Status</h3>
+                </a>
+  
+                <a href="/views/Project/login.html" class="sidebarf">
+                    <span class="material-symbols-outlined">logout</span>
+                    <h3>Log out</h3>
+                </a>
+            </div>
+        </aside>
+        <!-----------------end side bar -->
+
+        <div class="container">
+            <nav class="navbar mt-3 ">
+                <div class="container">
+                    <div class="link col">
+                        <a class="titlepage" href="index.html"><b>Search</b></a>
+                        /
+                        <a class="titlepage" href="input.html"><b>Product football</b></a>
+                        /
+                        <a class="titlepage" href="input.html"><b>Confirm Product</b></a>
+                    </div>
+                    <div class="profile col-auto">
+                        <img src="/public/img/bogbag.jpg"
+                            style="border-radius: 50%; width: 37px; height: 37px; border: 3px solid black;">
+                        <span class="ps-1"><b>Profile</b></span>
+                    </div>
+                </div>
+            </nav>
+            <!-- Input Form -->
+            <div class="row">
+                <div class="name">
+                    <h2 class="mb-4"><b>Product Name: </b></h2>
+                    <h2><b>Borrowed Day </b></h2>
+                    <input id="datepicker1" width="276" />
+                    <h2><b>Date of return</b></h2>
+                    <input id="datepicker2" width="276" />
+                    <p class="text-danger">*Note Come and get it within the day of borrowing</p>
+                    <div id="btn" class="d-flex justify-content-between ">
+                    <a class="btn btn-danger" href="/views/Project/search1.2.html">Back</a>
+                    <a class="btn btn-success" href="#">Success</a>
+                    </div>
+                    <!-- java Scrip input Date -->
+                    <script>
+                        $('#datepicker1').datepicker({
+                            uiLibrary: 'bootstrap5'
+                        });
+                    </script>
+                     <script>
+                        $('#datepicker2').datepicker({
+                            uiLibrary: 'bootstrap5'
+                        });
+                    </script>
+                    
+                    
+                </div>
+            </div>
+        </div>
+        
+</body>
+
+</html>

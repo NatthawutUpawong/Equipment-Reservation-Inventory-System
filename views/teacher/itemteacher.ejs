@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SearchStaff</title>
+
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <script src="/js/bootstrap.bundle.min.js"></script>
+
+  <!-- stylesheet -->
+  <link rel="stylesheet" href="/css/home.css">
+
+  <!-- material icons -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+
+<body>
+
+  <body>
+
+    <div class="container-fluid" id="container">
+      <aside>
+        <div class="top">
+          <div class="logo">
+            <img src="/assets/Borrowing 101 Education.png" alt="">
+          </div>
+        </div>
+        <div class="sidebar">
+          <a class="active" id="btnhome">
+            <span class="material-symbols-outlined">home</span>
+            <h3>HOME</h3>
+          </a>
+          <a class="link-light" id="btnsearch">
+            <span class="material-symbols-outlined">Search</span>
+            <h3>ITEM</h3>
+          </a>
+          <a class="link-light" id="btnhistory">
+            <span class="material-symbols-outlined">history</span>
+            <h3>HISTORY</h3>
+          </a>
+          <a class="link-light" id="btnrequirement">
+            <span class="material-symbols-outlined">format_list_bulleted</span>
+            <h3>REQUIREMENT</h3>
+          </a>
+
+          <a class="link-light" id="btnlogout">
+            <span class="material-symbols-outlined">logout</span>
+            <h3>LOG OUT</h3>
+          </a>
+        </div>
+      </aside>
+      <main>
+        <div class="container text-start mt-5 ">
+          <h1>SEARCH PRODUCT</h1>
+          <h6 id="user">
+
+          </h6>
+        </div>
+        <div class="  py-3 container ">
+        </div>
+        <div class="container py-1 text-start">
+          <h3>Product</h3>
+        </div>
+
+        <table class="table table-striped table-bordered">
+          <thead class="table-secondary">
+            <td>ID</td>
+            <td>Image</td>
+            <td>Name</td>
+            <td>Detail</td>
+            <td>Category</td>
+            <td>Status</td>
+            <!-- <td>Edit</td> -->
+          </thead>
+          <tbody id="tblProduct"></tbody>
+        </table>
+        <div class="pagination" id="pagination-container"></div>
+
+        <!-- Product list -->
+        <!-- <div class="album py-1 bg-body-tertiary">
+          <div class="container" id="procontainer">
+            <div class="row row-cols-1 row-cols-sm-3 row-cols-md-4 g-4" id="product-list">
+            </div>
+            <nav aria-label="Page navigation">
+              <ul class="pagination justify-content-center pt-4" id="pagination">
+              </ul>
+            </nav>
+          </div>
+        </div> -->
+        <div class="container" id="procontainer">
+          <!-- Elements will be added here dynamically -->
+        </div>
+        <ul class="pagination" id="pagination">
+          <!-- Pagination links will be added here dynamically -->
+        </ul>
+
+        <!-- <div id="product-list"></div> -->
+      </main>
+
+
+    </div>
+    <script>
+
+      const tblProduct = document.querySelector('#tblProduct');
+
+      getUser();
+      // search();
+      home();
+      logout();
+      history();
+      requirement();
+      // tbProduct();
+
+
+      async function getUser() {
+        try {
+          const response = await fetch('/user');
+          if (response.ok) {
+            const data = await response.json();
+            document.querySelector('#user').innerText = 'Welcome ' + data.username;
+            console.log(data);
+          }
+          else {
+            throw Error('Connection error');
+          }
+        } catch (err) {
+          console.error(err);
+          alert(err.message);
+        }
+      };
+
+      function logout() {
+        bntsignout = document.querySelector('#btnlogout');
+        bntsignout.onclick = function () {
+          fetch('/logout', {
+            method: 'GET',
+            credentials: 'include' // Include credentials (cookies) in the request
+          })
+            .then(response => {
+              if (response.ok) {
+                // Redirect to the home page or login page after successful logout
+                window.location.href = "/login";
+              } else {
+                console.error("Logout failed");
+              }
+            })
+            .catch(error => {
+              console.error("Error during logout:", error);
+            });
+        }
+      }
+      // home
+      function home() {
+        bntsignout = document.querySelector('#btnhome');
+        bntsignout.onclick = function () {
+          window.location = '/dashboard'
+        }
+      }
+
+      function itemsearch() {
+        bntsignout = document.querySelector('#btnsearch');
+        bntsignout.onclick = function () {
+          window.location = '/itemteacher'
+        }
+      }
+      function history() {
+        bntsignout = document.querySelector('#btnhistory');
+        bntsignout.onclick = function () {
+          window.location = '/historyteacher'
+        }
+      }
+      function requirement() {
+        bntsignout = document.querySelector('#btnrequirement');
+        bntsignout.onclick = function () {
+          window.location = '/requirementteacher'
+        }
+      }
+      /////////////////////////////////
+
+
+
+      getitemlist();
+
+      let data = []; // Your array of data
+      let currentPage = 1;
+      const itemsPerPage = 11; // Set the number of items per page
+
+      const paginationContainer = document.getElementById('pagination-container');
+      async function getitemlist() {
+        try {
+          const response = await fetch('/getallproducts');
+          if (response.ok) {
+            const json = await response.json();
+            data = json.products;
+            renderTable();
+          } else {
+            throw Error('Connection error');
+          }
+        } catch (err) {
+          console.error(err);
+          alert(err.message);
+        }
+      }
+
+      function createTable(startIndex, endIndex) {
+        let rows = '';
+        for (let i = startIndex; i < endIndex; i++) {
+          if (!data[i]) break; // Stop if there are no more items
+          const p = data[i];
+          let itemstatus = p.pro_status;
+          if (itemstatus == '1') {
+            itemstatus = 'available';
+            // console.log();
+            rows += `<tr><td>${p.pro_id}</td>`;
+            rows += `<td><img src="/assets/${p.pro_image}"  style="object-fit: cover;width: 60px; height: 60px;"></td>`;;
+            rows += `<td>${p.pro_name}</td>`;
+            rows += `<td>${p.pro_detail}</td>`;
+            rows += `<td>${p.pro_category}</td>`;
+            rows += `<td>${itemstatus}</td>`;
+          }
+          else if (itemstatus == '0') {
+            itemstatus = 'unavailable';
+            rows += `<tr><td>${p.pro_id}</td>`;
+            rows += `<td><img src="/assets/${p.pro_image}"  style="object-fit: cover;width: 60px; height: 60px;"></td>`;;
+            rows += `<td>${p.pro_name}</td>`;
+            rows += `<td>${p.pro_detail}</td>`;
+            rows += `<td>${p.pro_category}</td>`;
+            rows += `<td>${itemstatus}</td>`;
+          }
+        }
+        tblProduct.innerHTML = rows;
+      }
+
+      function handlePagination() {
+        const totalPages = Math.ceil(data.length / itemsPerPage);
+        paginationContainer.innerHTML = '';
+
+        for (let i = 1; i <= totalPages; i++) {
+          const button = document.createElement('button');
+          button.textContent = i;
+          button.setAttribute('class', 'btn btn-success m-2');
+          button.addEventListener('click', function () {
+            currentPage = parseInt(this.textContent);
+            renderTable();
+          });
+          paginationContainer.appendChild(button);
+        }
+      }
+
+      function renderTable() {
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        createTable(startIndex, endIndex);
+        handlePagination();
+      }
+
+
+      ///////////////// table 
+      // async function tbProduct() {
+      //   try {
+      //     const response = await fetch('/getallproducts');
+      //     if (response.ok) {
+      //       const json = await response.json();
+      //       data = json.products;
+      //       console.log(data);
+      //       let rows = '';
+      //       data.forEach(function (p) {
+      //         let itemstatus = p.pro_status;
+      //         if (itemstatus == '1') {
+      //           itemstatus = 'available';
+      //           // console.log();
+      //           rows += `<tr><td>${p.pro_id}</td>`;
+      //           rows += `<td><img src="/assets/${p.pro_image}"  style="object-fit: cover;width: 60px; height: 60px;"></td>`;;
+      //           rows += `<td>${p.pro_name}</td>`;
+      //           rows += `<td>${p.pro_detail}</td>`;
+      //           rows += `<td>${p.pro_category}</td>`;
+      //           rows += `<td>${itemstatus}</td>`;
+      //         }
+      //         else if (itemstatus == '0') {
+      //           itemstatus = 'unavailable';
+      //           rows += `<tr><td>${p.pro_id}</td>`;
+      //           rows += `<td><img src="/assets/${p.pro_image}"  style="object-fit: cover;width: 60px; height: 60px;"></td>`;;
+      //           rows += `<td>${p.pro_name}</td>`;
+      //           rows += `<td>${p.pro_detail}</td>`;
+      //           rows += `<td>${p.pro_category}</td>`;
+      //           rows += `<td>${itemstatus}</td>`;
+      //         }
+      //       });
+      //       tblProduct.innerHTML = rows;
+      //     }
+      //     else {
+      //       throw Error('Connection error');
+      //     }
+      //   } catch (err) {
+      //     console.error(err);
+      //     alert(err.message);
+      //   }
+      // };
+
+
+      //////////////////card------------------------
+      // const container = document.getElementById('procontainer');
+      // const pagination = document.getElementById('pagination');
+      // const itemsPerPage = 15; // Adjust the number of items per page as needed
+      // let data;
+
+      // async function showPage(page) {
+      //   const res = await fetch('/getallproducts'); // Replace with your API endpoint
+      //   const json = await res.json();
+      //   console.log(json);
+      //   container.innerHTML = '';
+      //   const start = (page - 1) * itemsPerPage;
+      //   const end = start + itemsPerPage;
+      //   const pageItems = json.products.slice(start, end); // Adjust the property name based on your API response
+
+      //   pageItems.forEach(product => {
+      //     let pic = product.pro_image;
+      //     console.log(pic.status);
+      //     // if(pic.status==undefined){
+      //     //   pic ='photo.png';
+      //     // }
+      //     // else{
+      //     //   pic = product.pro_image;
+      //     // }
+      //     const card = document.createElement('div');
+      //     card.classList.add('card');
+
+      //     // Image
+      //     const image = document.createElement('img');
+      //     image.src = `/assets/${pic}`;
+      //     image.alt = product.pro_name;
+      //     card.appendChild(image);
+
+      //     // Title
+      //     const title = document.createElement('h5');
+      //     title.textContent = product.pro_id;
+      //     card.appendChild(title);
+
+      //     // Button
+      //     const button = document.createElement('button');
+      //     button.textContent = `${product.pro_name}`;
+      //     button.classList.add('btn', 'btn-primary'); // You can add Bootstrap classes for styling
+      //     button.addEventListener('click', () => {
+      //       // Handle button click, e.g., redirect to product details page
+      //       window.location.href = `/getproduct/${product.pro_id}`;
+      //       // alert(product.Pro_id);
+      //     });
+      //     card.appendChild(button);
+
+      //     container.appendChild(card);
+      //   });
+      // }
+
+
+      // async function setupPagination() {
+      //   const res = await fetch('/getallproducts'); // Replace with your API endpoint
+      //   const json = await res.json();
+      //   const pageCount = Math.ceil(json.products.length / itemsPerPage); // Adjust the property name
+      //   for (let i = 1; i <= pageCount; i++) {
+      //     const li = document.createElement('li');
+      //     li.textContent = i;
+      //     li.addEventListener('click', () => showPage(i));
+      //     pagination.appendChild(li);
+      //   }
+      // }
+
+
+      // showPage(1);
+      // setupPagination();
+
+
+    </script>
+  </body>
+
+</html>

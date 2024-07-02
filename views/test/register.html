@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paginated Table</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .pagination button {
+      margin: 0 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div id="table-container"></div>
+<div class="pagination" id="pagination-container"></div>
+
+<script>
+  var itemsPerPage = 12;
+  var currentPage = 1;
+
+  // Your array of data
+  var dataArray = [
+    { name: 'John', age: 30, city: 'New York' },
+    { name: 'Jane', age: 25, city: 'Los Angeles' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'Bob', age: 35, city: 'Chicago' },
+    { name: 'John', age: 30, city: 'New York' },
+
+    // Add more objects as needed
+  ];
+
+  // Function to create a table from the array
+  function createTable(dataArray, startIndex, endIndex) {
+    var table = document.createElement('table');
+    var thead = table.createTHead();
+    var tbody = table.createTBody();
+    var headerRow = thead.insertRow();
+
+    // Create header row
+    for (var key in dataArray[0]) {
+      if (dataArray[0].hasOwnProperty(key)) {
+        var th = document.createElement('th');
+        th.textContent = key;
+        headerRow.appendChild(th);
+      }
+    }
+
+    // Create data rows within the specified range
+    for (var i = startIndex; i < endIndex; i++) {
+      var item = dataArray[i];
+      if (!item) break; // Stop if there are no more items
+      var row = tbody.insertRow();
+      for (var key in item) {
+        if (item.hasOwnProperty(key)) {
+          var cell = row.insertCell();
+          cell.textContent = item[key];
+        }
+      }
+    }
+
+    return table;
+  }
+
+  // Function to handle pagination
+  function handlePagination(dataArray) {
+    var totalPages = Math.ceil(dataArray.length / itemsPerPage);
+    var paginationContainer = document.getElementById('pagination-container');
+    paginationContainer.innerHTML = '';
+
+    for (var i = 1; i <= totalPages; i++) {
+      var button = document.createElement('button');
+      button.textContent = i;
+      button.addEventListener('click', function () {
+        currentPage = parseInt(this.textContent);
+        renderTable(dataArray);
+      });
+      paginationContainer.appendChild(button);
+    }
+  }
+
+  // Function to render the table based on the current page
+  function renderTable(dataArray) {
+    var startIndex = (currentPage - 1) * itemsPerPage;
+    var endIndex = startIndex + itemsPerPage;
+
+    var tableContainer = document.getElementById('table-container');
+    tableContainer.innerHTML = '';
+    tableContainer.appendChild(createTable(dataArray, startIndex, endIndex));
+
+    handlePagination(dataArray);
+  }
+
+  // Initial rendering
+  renderTable(dataArray);
+
+</script>
+
+</body>
+</html>

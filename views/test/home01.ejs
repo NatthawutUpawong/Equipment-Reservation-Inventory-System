@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+</head>
+<body>
+    <h1>Welcome to the Homepage</h1>
+    <button onclick="login()">Login</button>
+    <button onclick="accessProtected()">Access Protected Route</button>
+
+    <script>
+        let token = null;
+
+        async function login() {
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: 'chain@gmail.com',
+                    password: '1234',
+                })
+            });
+            const data = await response.json();
+            token = data.token;
+            console.log('Token:', token);
+        }
+
+        async function accessProtected() {
+            if (!token) {
+                console.log('Please login first');
+                return;
+            }
+
+            const response = await fetch('/authen', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                }
+            });
+            const data = await response.json();
+            console.log(data);
+        }
+    </script>
+</body>
+</html>

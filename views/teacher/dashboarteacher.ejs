@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- BS5 -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/bootstrap.bundle.min.js"></script>
+
+    <link rel="stylesheet" href="/css/home.css">
+
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <title>Dashboard</title>
+</head>
+<style>
+
+</style>
+
+<body>
+
+    <div class="container-fluid" id="container">
+        <aside>
+            <div class="top">
+                <div class="logo">
+                    <img src="/assets/Borrowing 101 Education.png" alt="">
+                </div>
+            </div>
+            <div class="sidebar">
+                <a class="active" id="btnhome">
+                    <span class="material-symbols-outlined">home</span>
+                    <h3>HOME</h3>
+                </a>
+                <a class="link-light" id="btnsearch">
+                    <span class="material-symbols-outlined">Search</span>
+                    <h3>ITEM</h3>
+                </a>
+                <a class="link-light" id="btnhistory">
+                    <span class="material-symbols-outlined">history</span>
+                    <h3>HISTORY</h3>
+                </a>
+                <a class="link-light" id="btnrequirement">
+                    <span class="material-symbols-outlined">format_list_bulleted</span>
+                    <h3>REQUIREMENT</h3>
+                </a>
+
+                <a class="link-light" id="btnlogout">
+                    <span class="material-symbols-outlined">logout</span>
+                    <h3>LOG OUT</h3>
+                </a>
+            </div>
+        </aside>
+        <!-----------------end side bar -->
+        <main>
+            <h1 class="mt-5">
+                DASHBOARD
+            </h1>
+            <h6 id="user">
+            </h6>
+            <div class="insights">
+                <div class="sport">
+                    <span class="material-symbols-outlined">
+                        approval_delegation
+                    </span>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>Borrowing</h3>
+                            <h1 id="borrowcount"></h1>
+                        </div>
+                        <div>
+                            <canvas id="myChart1" style="width:310px;max-width:600px"></canvas>
+                        </div>
+                    </div>
+                    <!-- <small class="text-muted">ss</small> -->
+                </div>
+                <!-- ------------------end of sport -->
+                <div class="tech">
+                    <span class="material-symbols-outlined">
+                        category
+                    </span>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>Available</h3>
+                            <h1 id="alavailablecount"></h1>
+                        </div>
+                        <div>
+                            <canvas id="myChart2" style="width:310px;max-width:600px"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- ------------------end of tech -->
+
+                <div class="music">
+                    <span class="material-symbols-outlined">
+                        monitoring
+                    </span>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>overall</h3>
+                            <h1 id="overallitem">30</h1>
+                        </div>
+                        <div>
+                            <canvas id="myChart3" style="width:310px;max-width:600px"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <!-- ------------------end of Music -->
+
+
+            </div>
+            <!-- ------------------------end of insights -->
+            <div class="space">
+                <h2>
+                    History
+                </h2>
+            </div>
+            <div class="history">
+
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>BorrowID</th>
+                            <th>ItemName</th>
+                            <th>UserName</th>
+                            <th>Borrowed date </th>
+                            <th>returned date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="borrowhistory">
+                    </tbody>
+                </table>
+            </div>
+
+
+        </main>
+
+        <!-- <div class="containerL">
+            <div class="container">
+                <h3 class="text-center mt-5"><b>User request</b></h3>
+                <div class="userreq">
+                </div>
+            </div>
+
+        </div> -->
+    </div>
+    <script>
+        getUser();
+        logout();
+        itemsearch();
+        history();
+        requirement();
+        getborrow();
+        getUserlist();
+        getitemlist();
+
+        // --------------------------------------------------history
+        let data = []; // Your array of data
+        let currentPage = 1;
+        const itemsPerPage = 10; // Set the number of items per page
+        const tblProduct = document.querySelector('#borrowhistory');
+        const paginationContainer = document.getElementById('pagination-container');
+        async function getitemlist() {
+            try {
+                const response = await fetch('/getborrowrequirement');
+                if (response.ok) {
+                    const json = await response.json();
+                    data = json.products;
+                    renderTable();
+                } else {
+                    throw Error('Connection error');
+                }
+            } catch (err) {
+                console.error(err);
+                //alert(err.message);
+            }
+        }
+
+        function createTable(startIndex, endIndex) {
+            let rows = '';
+            for (let i = startIndex; i < endIndex; i++) {
+                if (!data[i]) break; // Stop if there are no more items
+                const p = data[i];
+                if (p.bor_status == 'Approved') {
+                    const borStatus = 'Approved';
+                    rows += `<tr><td>${p.bor_id}</td>`;
+                    rows += `<td>${p.pro_name}</td>`;
+                    rows += `<td>${p.user_name}</td>`;
+                    rows += `<td>${new Date(p.bor_date).toLocaleDateString()}</td>`;
+                    rows += `<td>${new Date(p.bor_ret_date).toLocaleDateString()}</td>`;
+                    rows += `<td class ="text-success">${borStatus}</td></tr>`;
+                }
+                else if (p.bor_status == 'Disapproved') {
+                    const borStatus = 'Disapproved';
+                    rows += `<tr><td>${p.bor_id}</td>`;
+                    rows += `<td>${p.pro_name}</td>`;
+                    rows += `<td>${p.user_name}</td>`;
+                    rows += `<td>${new Date(p.bor_date).toLocaleDateString()}</td>`;
+                    rows += `<td>${new Date(p.bor_ret_date).toLocaleDateString()}</td>`;
+                    rows += `<td class ="text-danger">${borStatus}</td></tr>`;
+                }
+            }
+            // console.log(rows);
+            tblProduct.innerHTML = rows;
+        }
+
+
+
+        function renderTable() {
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            createTable(startIndex, endIndex);
+            // handlePagination();
+        }
+        // --------------------------------------------------history
+
+
+
+
+        // --------------------------------------------------req
+        let json;
+        let listUser = '';
+        let reqdata = []; // Your array of data
+        const userPerPage = 40; // Set the number of items per page
+        const userlist = document.querySelector('.userreq');
+        async function getUserlist() {
+            try {
+                const response = await fetch('/getborrowrequirement');
+                if (response.ok) {
+                    json = await response.json();
+                    reqdata = json.products;
+                    renderUer();
+                } else {
+                    throw Error('Connection error');
+                }
+            } catch (err) {
+                console.error(err);
+                // alert(err.message);
+
+
+            }
+        }
+
+        function reqlist(startIndex, endIndex) {
+            // console.log(json.status);
+            for (let i = startIndex; i < endIndex; i++) {
+                if (!reqdata[i]) break; // Stop if there are no more items
+                const p = reqdata[i];
+                // console.log(p);
+                if (p.bor_status == 'pending') {
+                    listUser += `
+                        <div class="updates">
+                                <div class="update">
+                                    <div class="mess">
+                                        <p><b>Item: ${p.pro_name}</b> User: ${p.user_name} </p>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                }
+
+            }
+            // console.log(rows);
+            userlist.innerHTML = listUser;7
+        }
+
+
+
+        function renderUer() {
+            const startIndex = (currentPage - 1) * userPerPage;
+            const endIndex = startIndex + userPerPage;
+            reqlist(startIndex, endIndex);
+        }
+        // --------------------------------------------------req
+
+
+
+        const borrowcount = document.querySelector('#borrowcount');
+        const alavailablecount = document.querySelector('#alavailablecount');
+        const overallitem = document.querySelector('#overallitem');
+        let borrowingcount = 0;
+        let borrowing = 0;
+        let allitemcount = 0;
+        let availableitemcount = 0;
+        let allitem = 0;
+        let Unavailable = 0;
+        async function getborrow() {
+            try {
+                const response = await fetch('/getuserApproved');
+                if (response.ok) {
+                    const json = await response.json();
+                    data = json.requirement;
+                    let rows = '';
+                    data.forEach(function (p) {
+                        if (p.ret_status == 'Approved') {
+                            borrowingcount += 1;
+                        }
+                    });
+                    borrowcount.innerHTML = borrowingcount;
+                    // console.log(borrowing);
+                    // initializeChart();
+
+                }
+                else {
+                    throw Error('Connection error');
+
+                }
+            } catch (err) {
+                console.error(err);
+                // alert(err.message);
+                borrowingcount = 0;
+                borrowcount.innerHTML = borrowingcount;
+            }
+            getallproducts();
+        };
+
+        async function getallproducts() {
+            try {
+                const response = await fetch('/getallproducts');
+                if (response.ok) {
+                    const json = await response.json();
+                    data = json.products;
+                    // console.log(data);
+                    let rows = '';
+                    data.forEach(function (p) {
+                        allitemcount += 1;
+                        if (p.pro_status == '1') {
+                            availableitemcount += 1;
+                        }
+                    });
+                    // console.log('sss',data);
+
+                    // borrowcount.innerHTML = borrowing;
+                    allitem = allitemcount;
+                    alavailablecount.innerHTML = availableitemcount;
+                    overallitem.innerHTML = allitem;
+                    Unavailable = allitem - (borrowingcount + availableitemcount);
+                    allitemcount -= borrowingcount;
+                    // console.log(allitemcount);
+                    // console.log('alv', availableitemcount);
+                    // console.log(allitem);
+                    initializeChart();
+                    chartalava();
+                    overallchart();
+
+                }
+                else {
+                    throw Error('Connection error');
+                }
+            } catch (err) {
+                console.error(err);
+                //alert(err.message);
+            }
+        };
+
+        //--------------------------------------------------chart #1
+        function initializeChart() {
+            var xValues = ["Borrowing", ""];
+            var yValues = [borrowingcount, allitemcount];
+            var barColors = [
+                "#97A5EB",
+                "#FDFEFE",
+            ];
+
+            new Chart("myChart1", {
+                type: "doughnut",
+                data: {
+                    labels: xValues,
+                    datasets: [{
+                        backgroundColor: barColors,
+                        data: yValues
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: "User borrowing"
+                    }
+                }
+            });
+        }
+        //--------------------------------------------------chartbor
+
+        //--------------------------------------------------chartbor
+        function chartalava() {
+            var xValues = ["Available", ""];
+            var yValues = [availableitemcount, allitemcount,];
+            var barColors = [
+                "#97A5EB",
+                "#FDFEFE",
+
+            ];
+
+            new Chart("myChart2", {
+                type: "doughnut",
+                data: {
+                    labels: xValues,
+                    datasets: [{
+                        backgroundColor: barColors,
+                        data: yValues
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: "Available itme"
+                    }
+                }
+            });
+        }
+        //--------------------------------------------------chartbor
+        //--------------------------------------------------chartbor
+        function overallchart() {
+            var xValues = ["Available", "Borrowing", "Unavailable"];
+            var yValues = [availableitemcount, borrowingcount, Unavailable,];
+            var barColors = [
+                "#2A265F",
+                "#5752D1",
+                "#B2B0EA",
+
+            ];
+
+            new Chart("myChart3", {
+                type: "doughnut",
+                data: {
+                    labels: xValues,
+                    datasets: [{
+                        backgroundColor: barColors,
+                        data: yValues
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: "Overall"
+                    }
+                }
+            });
+        }
+        //--------------------------------------------------chartbor
+
+
+        //get user info
+        async function getUser() {
+            try {
+                const response = await fetch('/user');
+                if (response.ok) {
+                    const data = await response.json();
+                    document.querySelector('#user').innerText = 'Welcome ' + data.username;
+                    // console.log(data);
+                }
+                else {
+                    throw Error('Connection error');
+                }
+            } catch (err) {
+                console.error(err);
+                //alert(err.message);
+            }
+        };
+        function logout() {
+            bntsignout = document.querySelector('#btnlogout');
+            bntsignout.onclick = function () {
+                fetch('/logout', {
+                    method: 'GET',
+                    credentials: 'include' // Include credentials (cookies) in the request
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // Redirect to the home page or login page after successful logout
+                            window.location.href = "/login";
+                        } else {
+                            console.error("Logout failed");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error during logout:", error);
+                    });
+            }
+        }
+        function itemsearch() {
+            bntsignout = document.querySelector('#btnsearch');
+            bntsignout.onclick = function () {
+                window.location = '/itemteacher'
+            }
+        }
+        function history() {
+            bntsignout = document.querySelector('#btnhistory');
+            bntsignout.onclick = function () {
+                window.location = '/historyteacher'
+            }
+        }
+        function requirement() {
+            bntsignout = document.querySelector('#btnrequirement');
+            bntsignout.onclick = function () {
+                window.location = '/requirementteacher'
+            }
+        }
+
+    </script>
+
+
+</body>
+
+</html>

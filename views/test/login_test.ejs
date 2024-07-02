@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/notiflix-aio-3.2.6.min.js"></script>
+    <link rel="stylesheet" href="/css/login.css">
+
+</head>
+
+<body>
+    <div id="row">
+        <div class="register">
+           <div>
+            <img  id="imglogo" src="/assets/Borrowing 101 Education.png" alt="">
+           </div>
+        </div>
+        <div class="container">
+            <form id="formLogin">
+                <!-- Email input -->
+                <div class="form-outline mb-4">
+                    <input name="txtUsername" type="text" id="form2Example1" class="form-control "
+                        placeholder="Username" required />
+                    <!-- <label class="form-label" for="form2Example1">Email address</label> -->
+                </div>
+
+                <!-- Password input -->
+                <div class="form-outline mb-4">
+                    <input name="txtPassword" type="password" id="form2Example2" class="form-control"
+                        placeholder="Password" required />
+                    <!-- <label class="form-label" for="form2Example2">Password</label> -->
+                </div>
+
+                <!-- 2 column grid layout for inline styling -->
+                <div class="row mb-4">
+                    <div class="col d-flex justify-content-center">
+                        <!-- Checkbox -->
+                        <div class="">
+                        <a id="btnregis" class="link-info">Register</a>
+
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <!-- Simple link -->
+                        <a class="link-danger" >Forgot password?</a>
+                    </div>
+                </div>
+
+                <!-- Submit button -->
+                <button type="submit" class="w-100 btn btn-lg btn-primary">Login</button>
+            </form>
+
+    <script>
+        let token = localStorage.getItem('token');
+        accessProtected();
+        register();
+
+        const formLogin = document.querySelector('#formLogin');
+        formLogin.onsubmit = async function (e) {
+            e.preventDefault();
+            const email = formLogin['txtUsername'].value;
+            const password = formLogin['txtPassword'].value;
+
+            // console.log(username, password);
+            try {
+                const options = {
+                    method: 'POST',
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ "U_username": email, "password": password }),
+                };
+                const response = await fetch('/login', options); //Send data value fro front to back
+                if (response.ok) {
+                    const data = await response.json();
+                    Notiflix.Report.success('Success',data,
+                    // alert(data.token),
+                    localStorage.setItem('token', data.token),
+                    window.location.replace('/dashboard'),
+                    console.log(data)
+                    );
+                    
+
+                }
+                else if (response.status === 401) {
+                    const data = await response.text();
+                    throw Error(message = 'login failed');
+                }
+                else {
+                    throw Error('Connection error');
+                }
+            } catch (err) {
+                console.error(err.message);
+                // alert(err.message);
+                Notiflix.Report.failure('Error', err.message, 'Close');
+            }
+        }
+        
+        async function accessProtected() {
+            try {
+                const options = {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json",
+                        'Authorization': `Bearer ${token}`,
+                    },
+                };
+                const response = await fetch('/authen', options); //Send data value fro front to back
+                const data = await response.json();
+                console.log(data)
+                if (data.status == 'ok') {
+                    // alert('authen success')
+                    window.location = '/dashboard'
+                    
+                }
+                else {
+                    localStorage.removeItem('token');
+                }
+            } catch (err) {
+                console.error(err.message);
+                // alert(err.message);
+                Notiflix.Report.failure('Error', err.message, 'Close');
+            }
+        }
+        function register() {
+            bntsignout = document.querySelector('#btnregis');
+            bntsignout.onclick = function () {
+                // localStorage.removeItem('token')
+                window.location = '/register'
+            }
+        }
+    </script>
+</body>
+
+</html>

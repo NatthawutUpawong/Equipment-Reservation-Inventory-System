@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/notiflix-aio-3.2.6.min.js"></script>
+    <link rel="stylesheet" href="/css/register.css">
+
+</head>
+
+<body>
+    <div id="row">
+        <div class="register">
+            <div>
+                <img id="imglogo" src="/assets/Borrowing 101 Education.png" alt="">
+            </div>
+        </div>
+        <div class="container">
+            <form id="formLogin">
+                <!-- id input -->
+                <div class="form-outline mb-4">
+                    <input name="txtid" type="text" class="form-control " placeholder="Student ID" required
+                        pattern="[0-9]{7}" required />
+                    <!-- <label class="form-label" for="form2Example1">Email address</label> -->
+                </div>
+
+                <!-- username input -->
+                <div class="form-outline mb-4">
+                    <input name="txtusername" type="text" class="form-control" placeholder="Username" required />
+                    <!-- <label class="form-label" for="form2Example2">Password</label> -->
+                </div>
+
+                <!-- name input -->
+                <div class="form-outline mb-4">
+                    <input name="txtname" type="text" class="form-control" placeholder="Fullname" required />
+                    <!-- <label class="form-label" for="form2Example2">Password</label> -->
+                </div>
+
+                <!-- password input -->
+                <div class="form-outline mb-4">
+                    <input name="txtPassword" type="password" class="form-control" placeholder="Enter password." />
+                    <!-- <label class="form-label" for="form2Example2">Password</label> -->
+                </div>
+
+                <!-- img input -->
+                <div class="form-outline mb-4">
+                    <input name="txtimg" type="text" class="form-control" placeholder="url img" required />
+                    <!-- <label class="form-label" for="form2Example2">Password</label> -->
+                </div>
+
+                <!-- phone input -->
+                <div class="form-outline mb-4">
+                    <input name="txtphone" type="text" class="form-control" placeholder="Phone" required
+                        pattern="[0-9]{10}" maxlength="10" required />
+                    <!-- <label class="form-label" for="form2Example2">Password</label> -->
+                </div>
+
+                <!-- Submit button -->
+                <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            </form>
+
+            <script>
+                getUser();
+
+                async function getUser() {
+                    try {
+                        const response = await fetch('/user');
+                        if (response.ok) {
+                            const data = await response.json();
+                        }
+                        else {
+                            throw Error('Connection error');
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert(err.message);
+                    }
+                };
+
+                const formLogin = document.querySelector('#formLogin');
+                formLogin.onsubmit = async function (e) {
+                    e.preventDefault();
+                    const id = formLogin['txtid'].value;
+                    const username = formLogin['txtusername'].value;
+                    const name = formLogin['txtname'].value;
+                    const password = formLogin['txtPassword'].value;
+                    const role = '3';
+                    const img = formLogin['txtimg'].value;
+                    const phone = formLogin['txtphone'].value;
+
+                    // console.log(username, password);
+                    try {
+                        const options = {
+                            method: 'POST',
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                "user_id": id,
+                                "user_username": username,
+                                "user_name": name,
+                                "user_password": password,
+                                "user_role": role,
+                                "user_image": img,
+                                "user_phone": phone
+                            }),
+                        };
+                        const response = await fetch('/register', options); //Send data value fro front to back
+                        if (response.ok) {
+                            const data = await response.text();
+                            await Notiflix.Notify.success(
+                                'Success',
+                                window.location = '/'
+                            );
+                            // await Notiflix.notif.success('Success', data, 'OK', window.location = '/')
+
+                        }
+                        else if (response.status === 500) {
+                            const data = await response.text();
+                            throw Error('This id is already used');
+
+                        }
+                        else {
+                            throw Error('Connection error');
+                        }
+                    } catch (err) {
+                        console.error(err.message);
+                        // alert(err.message);
+                        Notiflix.Report.failure('Error', err.message, 'Close');
+                    }
+                }
+            </script>
+</body>
+
+</html>
